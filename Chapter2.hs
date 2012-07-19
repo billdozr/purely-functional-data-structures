@@ -62,8 +62,8 @@ member2 x t@(Node l v r) = member' t v
 insert2 :: Ord a => a -> BSTree a -> Either AlreadyExists (BSTree a)
 insert2 x t = 
   case insert' t of 
-    Empty -> Left "Element already exists"
-    r -> Right r
+    Empty -> fail "insert2: Element already exists"
+    r -> return r
   where insert' Empty = Node Empty x Empty
         insert' (Node l v r)
           | x < v = Node (insert' l) v r
