@@ -1,3 +1,7 @@
+module Chapter2 where
+
+import Control.Monad (liftM)
+
 {- 
 ==========================
 2.1 Lists 
@@ -19,8 +23,6 @@ suffixes xs = xs : (suffixes $ tail xs)
 
 data BSTree a = Empty | Node (BSTree a) a (BSTree a) 
                        deriving (Show, Eq)
-                                
-type AlreadyExists = String
 
 mkTree = 
   (Node 
@@ -59,14 +61,10 @@ member2 x t@(Node l v r) = member' t v
 -- // --------------------------
 -- // Exercise 2.3
 -- // --------------------------
-insert2 :: Ord a => a -> BSTree a -> Either AlreadyExists (BSTree a)
-insert2 x t = 
-  case insert' t of 
-    Empty -> fail "insert2: Element already exists"
-    r -> return r
-  where insert' Empty = Node Empty x Empty
-        insert' (Node l v r)
-          | x < v = Node (insert' l) v r
-          | v < x = Node l v (insert' r)
-          | otherwise = Empty
+insert2 :: Ord a => a -> BSTree a -> Either String (BSTree a)
+insert2 x Empty = return (Node Empty x Empty)
+insert2 x (Node l v r)
+  | x < v = liftM (\t -> Node t v r) (insert2 x l)
+  | v < x = liftM (\t -> Node l v t) (insert2 x r)
+  | otherwise = fail "insert2: element already exists"
 -- \\ --------------------------
