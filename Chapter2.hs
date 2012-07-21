@@ -68,3 +68,19 @@ insert2 x (Node l v r)
   | v < x = liftM (\t -> Node l v t) (insert2 x r)
   | otherwise = fail "insert2: element already exists"
 -- \\ --------------------------
+
+-- // --------------------------
+-- // Exercise 2.4
+-- // --------------------------
+insert3 :: Ord a => a -> BSTree a -> Either String (BSTree a)
+insert3 x Empty = return (Node Empty x Empty)
+insert3 x s@(Node _ v _) = insert' s v
+  where insert' Empty c = 
+          if x == c then
+            fail "insert3: element already exists"
+          else insert3 x Empty
+        insert' (Node a y b) c =
+          if x < y then
+            liftM (\t -> Node t y b) (insert' a c)
+          else liftM (\t -> Node a y t) (insert' b y)
+-- \\ --------------------------
