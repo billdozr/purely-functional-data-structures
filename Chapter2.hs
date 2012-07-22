@@ -1,6 +1,7 @@
 module Chapter2 where
 
 import Control.Monad (liftM)
+import Control.Monad.Instances
 
 {- 
 ==========================
@@ -31,14 +32,14 @@ mkTree =
    8
    (Node Empty 10 (Node (Node Empty 13 Empty) 14 Empty)))
 
-member :: Ord a => a -> BSTree a -> Bool
+member :: (Ord a) => a -> BSTree a -> Bool
 member _ Empty = False
 member x (Node l v r)
   | x < v = member x l 
   | x > v = member x r
   | otherwise = True
                 
-insert :: Ord a => a -> BSTree a -> BSTree a
+insert :: (Ord a) => a -> BSTree a -> BSTree a
 insert x Empty = Node Empty x Empty
 insert x t@(Node l v r)
   | x < v = Node (insert x l) v r
@@ -48,7 +49,7 @@ insert x t@(Node l v r)
 -- // --------------------------
 -- // Exercise 2.2
 -- // --------------------------
-member2 :: Ord a => a -> BSTree a -> Bool
+member2 :: (Ord a) => a -> BSTree a -> Bool
 member2 _ Empty = False
 member2 x t@(Node l v r) = member' t v
   where member' Empty c = x == c
@@ -61,7 +62,7 @@ member2 x t@(Node l v r) = member' t v
 -- // --------------------------
 -- // Exercise 2.3
 -- // --------------------------
-insert2 :: Ord a => a -> BSTree a -> Either String (BSTree a)
+insert2 :: (Ord a) => a -> BSTree a -> Either String (BSTree a)
 insert2 x Empty = return (Node Empty x Empty)
 insert2 x (Node l v r)
   | x < v = liftM (\t -> Node t v r) (insert2 x l)
@@ -72,7 +73,7 @@ insert2 x (Node l v r)
 -- // --------------------------
 -- // Exercise 2.4
 -- // --------------------------
-insert3 :: Ord a => a -> BSTree a -> Either String (BSTree a)
+insert3 :: (Ord a) => a -> BSTree a -> Either String (BSTree a)
 insert3 x Empty = return (Node Empty x Empty)
 insert3 x s@(Node _ v _) = insert' s v
   where insert' Empty c = 
@@ -83,4 +84,14 @@ insert3 x s@(Node _ v _) = insert' s v
           if x < y then
             liftM (\t -> Node t y b) (insert' a c)
           else liftM (\t -> Node a y t) (insert' b y)
+-- \\ --------------------------
+
+-- // --------------------------
+-- // Exercise 2.5
+-- // --------------------------
+complete :: a -> Int -> BSTree a
+complete x d
+  | d == 0 = Node Empty x Empty
+  | d > 0 = Node (complete x (d - 1)) x (complete x (d - 1))
+  | otherwise = Empty
 -- \\ --------------------------
