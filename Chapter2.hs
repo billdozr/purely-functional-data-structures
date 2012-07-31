@@ -108,3 +108,9 @@ balanced x n -- D&C with even/odd division
   where balanced2 m = (balanced x m, balanced x (m + 1))
         div2 = (`div` 2)
 -- \\ --------------------------
+
+-- // --------------------------
+-- // Exercise 2.6
+-- // --------------------------
+-- #TODO
+-- \\ --------------------------
