@@ -92,6 +92,19 @@ insert3 x s@(Node _ v _) = insert' s v
 complete :: a -> Int -> BSTree a
 complete x d
   | d == 0 = Node Empty x Empty
-  | d > 0 = Node (complete x (d - 1)) x (complete x (d - 1))
+  | d > 0 = let stree = complete x (d - 1)
+              in Node stree x stree
   | otherwise = Empty
+                
+balanced :: a -> Int -> BSTree a
+balanced x n
+  | n <= 0 = Empty
+  | n == 1 = Node Empty x Empty
+  | even (n - 1) = 
+      let stree = balanced x (div2 $ n - 1)
+        in Node stree x stree
+  | otherwise = let (ltree, rtree) = balanced2 (div2 $ n - 1)
+                    in Node ltree x rtree
+  where balanced2 m = (balanced x m, balanced x (m + 1))
+        div2 = (`div` 2)
 -- \\ --------------------------
