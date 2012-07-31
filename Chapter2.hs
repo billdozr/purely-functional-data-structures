@@ -97,7 +97,7 @@ complete x d
   | otherwise = Empty
                 
 balanced :: a -> Int -> BSTree a
-balanced x n
+balanced x n -- D&C with even/odd division
   | n <= 0 = Empty
   | n == 1 = Node Empty x Empty
   | even (n - 1) = 
