@@ -41,10 +41,10 @@ member x (Node l v r)
                 
 insert :: (Ord a) => a -> BSTree a -> BSTree a
 insert x Empty = Node Empty x Empty
-insert x t@(Node l v r)
+insert x (Node l v r)
   | x < v = Node (insert x l) v r
   | v < x = Node l v (insert x r)
-  | otherwise = t
+  | otherwise = (Node l x r)
 
 -- // --------------------------
 -- // Exercise 2.2
@@ -112,5 +112,26 @@ balanced x n -- D&C with even/odd division
 -- // --------------------------
 -- // Exercise 2.6
 -- // --------------------------
--- #TODO
+type Map k v = BSTree (Key k, Val v)
+newtype Key k = Key k deriving (Show, Eq)
+newtype Val v = Val v deriving (Show)
+
+instance (Ord k) => Ord (Key k) where   
+  (Key k) `compare` (Key k') = compare k k'
+instance Eq (Val v) where 
+  _ == _ = True
+instance Ord (Val v) where 
+  _ `compare` _ = EQ
+
+emptyM = Empty
+
+bindM :: (Ord k, Ord v) => Key k -> Val v -> Map k v -> Map k v
+bindM k v m = insert (k, v) m
+
+lookupM :: (Ord k, Ord v) => Key k -> Map k v -> Either String (Val v)
+lookupM _ Empty = fail "lookupM: element does not exist"
+lookupM k (Node a (k', v) b)
+  | k < k' = lookupM k a
+  | k > k' = lookupM k b
+  | otherwise = return v
 -- \\ --------------------------
