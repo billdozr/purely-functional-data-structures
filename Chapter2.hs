@@ -25,6 +25,7 @@ suffixes xs = xs : (suffixes $ tail xs)
 data BSTree a = Empty | Node (BSTree a) a (BSTree a) 
                        deriving (Show, Eq)
 
+--type Set = BSTree
 mkTree = 
   (Node 
    (Node (Node Empty 1 Empty) 
